@@ -4,16 +4,22 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 8000;
+
+// Middleware
 app.use(cookieParser());
-require("./config/mongoose.config");
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(
     cors({
         credentials: true,
-        origin: [`http://localhost:3000`,]
+        origin: ['http://localhost:3000', 'https://eventorganizerpy.netlify.app'], // Added your deployed frontend URL
     })
 );
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+
+require("./config/mongoose.config");
+
 
 const sessionRoutes = require("./routes/session.routes");
 app.use('/api/session', sessionRoutes);
@@ -24,5 +30,4 @@ app.use('/api/user', userRoutes);
 const postRoutes = require("./routes/post.routes");
 app.use('/api/post', postRoutes);
 
-
-app.listen(port, () => console.log(`listen port: ${port}`));
+app.listen(port, () => console.log(`Listening on port: ${port}`));
